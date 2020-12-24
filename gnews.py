@@ -12,7 +12,10 @@ pd.set_option('display.max_colwidth', -1)
 
 def scrape():
     keywords = []
-    keywords.append(entry.get())
+    #keywords.append(entry.get())
+    words = entry.get().split(",")
+    keywords = words
+    print(keywords)
     number_of_articles = int(num_of_articles.get())
     time = '10d'  # change time period to search within (e.g., '1d' --> articles in the past day, '7d' --> past week)
 
@@ -100,7 +103,7 @@ def scrape():
         filename = "gnews_search_results_" + date + ".csv"
         df.to_csv(filename, index=False)
 
-        window.destroy()
+    window.destroy()
 
 def test():
     print("Reached")
@@ -124,10 +127,10 @@ num_of_articles.pack()
 
 button = tk.Button(
     text="Search n' Scrape",
-    width=25,
+    width=20,
     height=5,
-    bg="blue",
-    fg="yellow",
+    bg="black",
+    fg="white",
     command = scrape
 )
 
