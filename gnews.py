@@ -4,6 +4,7 @@ from newspaper import Config
 import pandas as pd
 from datetime import datetime
 import tkinter as tk
+from tkinter import messagebox
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -17,13 +18,16 @@ def scrape():
     keywords = words
     print(keywords)
     number_of_articles = int(num_of_articles.get())
-    time = '10d'  # change time period to search within (e.g., '1d' --> articles in the past day, '7d' --> past week)
+    time = '1d'  # change time period to search within (e.g., '1d' --> articles in the past day, '7d' --> past week)
 
     googlenews = GoogleNews(period=time)
     # googlenews = GoogleNews(lang="en")
 
-    for keyword in keywords:
+    finalDF = pd.DataFrame()
+    df_list = []
 
+    for keyword in keywords:
+        keyword = keyword.strip()
         googlenews.get_news(keyword)
 
         numarticles = number_of_articles
@@ -100,9 +104,13 @@ def scrape():
         print("Successfully retrieved authors for {0} articles ({1}% success rate).".format(success, pct))
         today = datetime.today()
         date = today.strftime("%b-%d-%Y")
-        filename = "gnews_search_results_" + date + ".csv"
-        df.to_csv(filename, index=False)
+        df_list.append(df)
 
+    finalDF = pd.concat(df_list)
+    filename = "gnews_search_results_" + date + ".csv"
+    finalDF.to_csv(filename, index=False)
+
+    messagebox.showinfo("Google News Scraper", "Scraping finished!")
     window.destroy()
 
 def test():
